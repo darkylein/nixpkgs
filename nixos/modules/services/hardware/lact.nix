@@ -436,7 +436,7 @@ in
       path = with pkgs; [ lact ];
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/lact daemon";
-        Nice = cfg.serviceRenice;
+        Nice = cfg.nice;
       };
       wantedBy = [ "multi-user.target" ];
     };
