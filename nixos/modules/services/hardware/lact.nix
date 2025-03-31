@@ -195,7 +195,7 @@ in
                     default = null;
                     description = "Power limit in watts.";
                     example = 320.0;
-                    type = lib.types.nullOr lib.types.ints.positive;
+                    type = lib.types.nullOr lib.types.numbers.positive;
                   };
 
                   performance_level = lib.mkOption {
@@ -323,21 +323,17 @@ in
               };
 
               admin_groups = lib.mkOption {
-                # TODO: Check if sequence is the same in config.yaml or if it was sorted
-                # alphabetically, wheel should be first. AFAIK sudo can be removed here, because
-                # this config is aimed for NixOS only and NixOS uses wheel. Adjust description
-                # accordingly.
                 default = [
                   "wheel"
-                  "sudo"
                 ];
                 description = ''
                   User groups who should have access to the daemon.
-                  WARNING: only the first group from this list that is found on the system is used!
-                  This is made a list and not a single value to allow this config to work across
-                  different distros, which might have different groups for an "admin" user.
+                  ONLY the first group from this list that is found on the system is used!
                 '';
-                example = [ "sudo" ];
+                example = [
+                  "wheel"
+                  "sudo"
+                ];
                 type = lib.types.listOf lib.types.str;
               };
 
@@ -388,8 +384,12 @@ in
               example = {
                 profiles = {
                   vkcube = {
-                    # TODO: Add minimal example for gpus.
-                    # gpus = { };
+                    gpus = {
+                      "1002:73EF-1043:05E3-0000:03:00.0" = {
+                        fan_control_enabled = true;
+                        static_speed = 1.0;
+                      };
+                    };
                     rule = {
                       type = "process";
                       filter = {
