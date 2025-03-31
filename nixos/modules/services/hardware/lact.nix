@@ -303,14 +303,12 @@ in
         '';
         type = lib.types.submodule {
           options = {
-            # Configuration Version number was added in LACT version 0.7.
-            # version = lib.mkOption {
-            #   default = 2;
-            #   description = "Config version number.";
-            #   readOnly = true;
-            #   visible = false;
-            # type = lib.types.ints.positive;
-            # };
+            # TODO: Move version into 0.7.2 branch
+            version = lib.mkOption {
+              default = 2;
+              description = "Configuration version number. Changing this is not recommended.";
+              type = lib.types.ints.positive;
+            };
             daemon = {
               log_level = lib.mkOption {
                 default = "info";
