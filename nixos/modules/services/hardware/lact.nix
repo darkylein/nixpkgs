@@ -303,7 +303,6 @@ in
         '';
         type = lib.types.submodule {
           options = {
-            # TODO: Move version into 0.7.2 branch
             version = lib.mkOption {
               default = 2;
               description = "Configuration version number. Changing this is not recommended.";
@@ -406,7 +405,6 @@ in
                     options = {
                       gpus = gpusType;
 
-                      # TODO: Move rule into 0.7.2 branch
                       rule = lib.mkOption {
                         default = null;
                         description = ''
@@ -460,7 +458,6 @@ in
               );
             };
 
-            # TODO: Move auto_switch_profiles into 0.7.2 branch
             auto_switch_profiles = lib.mkOption {
               default = false;
               description = ''
