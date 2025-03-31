@@ -422,8 +422,8 @@ in
               );
             }
             ''
-              # Workaround for lact’s strict integer key requirement. This converts every numeric
-              # key into an integer/string.
+              # Workaround for lact’s strict integer key requirement. This converts a valid
+              # every numeric key into an integer.
               ${lib.getExe pkgs.yj} -yy -k < $yaml > $out
             '';
       };
