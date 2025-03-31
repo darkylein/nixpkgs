@@ -354,7 +354,7 @@ in
                 type = lib.types.bool;
               };
 
-              tcp_listen_address = {
+              tcp_listen_address = lib.mkOption {
                 default = null;
                 description = ''
                   Daemon's TCP listening address. Not specified by default.
