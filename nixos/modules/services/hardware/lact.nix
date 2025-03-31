@@ -18,12 +18,14 @@ in
 
     serviceRenice = lib.mkOption {
       default = -10;
+      description = "Nice value for the LACT systemd service.";
       example = 0;
       type = lib.types.numbers.between (-20) 19;
     };
 
     # Since LACT is not an AMD only tool anymore I've renamed the gpuOverclock option accordingly,
-    # so Nvidia and Intel users do not get confused. Also the description is slightly adjusted.
+    # so Nvidia and Intel users do not get confused. Also the description of ppfeaturemask
+    # is slightly adjusted.
     amdgpuOverclock = {
       enable = lib.mkEnableOption "AMD GPU overclocking";
       ppfeaturemask = lib.mkOption {
@@ -197,6 +199,10 @@ in
       lib.mkOption {
         default = { };
         visible = "shallow";
+        description = ''
+          Configuration for LACT. The attributes are serialized to YAML used as `config.yaml`. See
+          https://github.com/ilya-zlobintsev/LACT/blob/master/docs/CONFIG.md
+        '';
         type = lib.types.submodule {
           options = {
             # Configuration Version number was added in LACT version 0.7.
