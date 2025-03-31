@@ -7,10 +7,10 @@
 let
   # TODO: Add missing descriptions and options.
   # TODO: Check all comments.
-  cfg = config.myNixos.services.lact;
+  cfg = config.services.lact;
 in
 {
-  options.myNixos.services.lact = {
+  options.services.lact = {
     # LACT is not AMD exclusive anymore, so I've used the generic name from their README.
     enable = lib.mkEnableOption "LACT Linux GPU Control Application";
 
