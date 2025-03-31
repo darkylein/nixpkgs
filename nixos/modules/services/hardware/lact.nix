@@ -91,6 +91,7 @@ in
 
                   fan_control_settings = lib.mkOption {
                     default = null;
+                    description = "Configuration for advanced gpu fan control.";
                     type = lib.types.nullOr (
                       lib.types.submodule {
                         options = {
@@ -383,38 +384,67 @@ in
 
             profiles = lib.mkOption {
               default = null;
+              description = ''
+                An attributes set of LACT profiles. The attribute name is is the profile name.
+              '';
+              example = {
+                profiles = {
+                  vkcube = {
+                    # TODO: Add minimal example for gpus.
+                    # gpus = { };
+                    rule = {
+                      type = "process";
+                      filter = {
+                        name = "vkcube";
+                      };
+                      args = [ "--my-arg" ];
+                    };
+                  };
+                };
+              };
               type = lib.types.nullOr (
                 lib.types.attrsOf (
                   lib.types.submodule {
                     options = {
                       gpus = gpusType;
 
-                      # TODO: Move rules into 0.7.2 branch
-                      rules = lib.mkOption {
+                      # TODO: Move rule into 0.7.2 branch
+                      rule = lib.mkOption {
                         default = null;
+                        description = ''
+                          Profile activation rule for when this profile should be activated
+                          when using automatic profile switching.
+                        '';
                         type = lib.types.nullOr (
                           lib.types.submodule {
                             options = {
                               type = lib.mkOption {
                                 example = "process";
+                                description = "Type of the rule.";
                                 type = lib.types.enum [
                                   "gamemode"
                                   "process"
                                 ];
                               };
 
-                              rule = lib.mkOption {
+                              filter = lib.mkOption {
                                 default = null;
+                                description = ''
+                                  Process filter. This is not required when using the gamemode rule
+                                  type.
+                                '';
                                 type = lib.types.nullOr (
                                   lib.types.submodule {
                                     options = {
                                       name = lib.mkOption {
                                         example = "vkcube";
+                                        description = "Name of the process.";
                                         type = lib.types.str;
                                       };
 
                                       args = lib.mkOption {
                                         default = null;
+                                        description = "Process arguments. Not required.";
                                         example = "--my-arg";
                                         type = lib.types.nullOr lib.types.str;
                                       };
