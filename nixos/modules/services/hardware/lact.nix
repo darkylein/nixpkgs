@@ -303,12 +303,6 @@ in
         '';
         type = lib.types.submodule {
           options = {
-            # TODO: Move version into 0.7.2 branch
-            version = lib.mkOption {
-              default = 2;
-              description = "Configuration version number. Changing this is not recommended.";
-              type = lib.types.ints.positive;
-            };
             daemon = {
               log_level = lib.mkOption {
                 default = "info";
@@ -405,70 +399,12 @@ in
                   lib.types.submodule {
                     options = {
                       gpus = gpusType;
-
-                      # TODO: Move rule into 0.7.2 branch
-                      rule = lib.mkOption {
-                        default = null;
-                        description = ''
-                          Profile activation rule for when this profile should be activated
-                          when using automatic profile switching.
-                        '';
-                        type = lib.types.nullOr (
-                          lib.types.submodule {
-                            options = {
-                              type = lib.mkOption {
-                                example = "process";
-                                description = "Type of the rule.";
-                                type = lib.types.enum [
-                                  "gamemode"
-                                  "process"
-                                ];
-                              };
-
-                              filter = lib.mkOption {
-                                default = null;
-                                description = ''
-                                  Process filter. This is not required when using the gamemode rule
-                                  type.
-                                '';
-                                type = lib.types.nullOr (
-                                  lib.types.submodule {
-                                    options = {
-                                      name = lib.mkOption {
-                                        example = "vkcube";
-                                        description = "Name of the process.";
-                                        type = lib.types.str;
-                                      };
-
-                                      args = lib.mkOption {
-                                        default = null;
-                                        description = "Process arguments. Not required.";
-                                        example = "--my-arg";
-                                        type = lib.types.nullOr lib.types.str;
-                                      };
-                                    };
-                                  }
-                                );
-                              };
-                            };
-                          }
-                        );
-                      };
                     };
                   }
                 )
               );
             };
 
-            # TODO: Move auto_switch_profiles into 0.7.2 branch
-            auto_switch_profiles = lib.mkOption {
-              default = false;
-              description = ''
-                If profiles should automatically switch based on their configured rules.
-              '';
-              example = true;
-              type = lib.types.bool;
-            };
           };
         };
       };
