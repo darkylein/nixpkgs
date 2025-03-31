@@ -197,6 +197,7 @@ in
       lib.mkOption {
         default = { };
         type = lib.types.submodule {
+          visible = "shallow";
           options = {
             # Configuration Version number was added in LACT version 0.7.
             # version = lib.mkOption {
