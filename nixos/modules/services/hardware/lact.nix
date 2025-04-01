@@ -324,16 +324,6 @@ in
                 ];
                 type = lib.types.listOf lib.types.str;
               };
-              admin_user = lib.mkOption {
-                default = null;
-                description = ''
-                  User that owns the daemon socket.
-                  This user will have access to the daemon, even if they are not in the part of the
-                  `admin_group` group.
-                '';
-                example = "foo";
-                type = lib.types.nullOr lib.types.str;
-              };
 
               disable_clocks_cleanup = lib.mkOption {
                 default = false;
@@ -387,13 +377,6 @@ in
                         fan_control_enabled = true;
                         static_speed = 1.0;
                       };
-                    };
-                    rule = {
-                      type = "process";
-                      filter = {
-                        name = "vkcube";
-                      };
-                      args = [ "--my-arg" ];
                     };
                   };
                 };
