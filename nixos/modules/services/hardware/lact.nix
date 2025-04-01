@@ -6,26 +6,21 @@
 }:
 let
   # TODO: Add missing options
-  # TODO: Check all comments.
   cfg = config.services.lact;
 in
 {
   options.services.lact = {
-    # LACT is not AMD exclusive anymore, so I've used the generic name from their README.
     enable = lib.mkEnableOption "LACT Linux GPU Control Application";
 
     package = lib.mkPackageOption pkgs "LACT" { default = [ "lact" ]; };
 
-    serviceRenice = lib.mkOption {
+    nice = lib.mkOption {
       default = -10;
-      description = "Niceness for the LACT systemd service.";
+      description = "Niceness of the LACT daemon.";
       example = 0;
       type = lib.types.ints.between (-20) 19;
     };
 
-    # Since LACT is not an AMD only tool anymore I've renamed the gpuOverclock option accordingly,
-    # so Nvidia and Intel users do not get confused. Also the description of ppfeaturemask
-    # is slightly adjusted.
     amdgpuOverclock = {
       enable = lib.mkEnableOption "AMD GPU overclocking";
       ppfeaturemask = lib.mkOption {
@@ -140,7 +135,6 @@ in
                           };
 
                           curve = lib.mkOption {
-                            # Can the key be type checked to be a stringified integer?
                             default = {
                               "40" = 0.2;
                               "50" = 0.35;
@@ -222,7 +216,7 @@ in
                       Setting this requires `performance_level` to be set to `manual`.
                     '';
                     example = 1;
-                    type = lib.types.nullOr lib.types.ints.unsigned; # How many indices are there?
+                    type = lib.types.nullOr lib.types.ints.unsigned;
                   };
 
                   min_core_clock = lib.mkOption {
@@ -334,6 +328,16 @@ in
                   "sudo"
                 ];
                 type = lib.types.listOf lib.types.str;
+              };
+              admin_user = lib.mkOption {
+                default = null;
+                description = ''
+                  User that owns the daemon socket.
+                  This user will have access to the daemon, even if they are not in the part of the
+                  `admin_group` group.
+                '';
+                example = "foo";
+                type = lib.types.nullOr lib.types.str;
               };
 
               disable_clocks_cleanup = lib.mkOption {
@@ -478,9 +482,8 @@ in
 
     environment = {
       etc."lact/config.yaml" = lib.mkIf (cfg.settings != { }) {
-        # Setting mode "0644" instead of "symlink" ensures that LACT can modify the config file.
-        # This prevents the 'Error: Could not write config. Read-only file system (os error 30)`
-        # which happens during LACT profile switch or migration between version.
+        # Setting mode to "0644" instead of "symlink" creates a file instead of a symlink to the
+        # nix-store. This ensures that LACT can modify the config file.
         mode = "0644";
         source =
           pkgs.runCommand "lact-config.yaml"
@@ -491,8 +494,8 @@ in
               );
             }
             ''
-              # Workaround for lact’s strict integer key requirement. This converts every numeric
-              # key into an integer.
+              # Workaround for lact’s strict integer key requirement. This converts a valid
+              # numeric key into an integer.
               ${lib.getExe pkgs.yj} -yy -k < $yaml > $out
             '';
       };
@@ -505,7 +508,7 @@ in
       path = with pkgs; [ lact ];
       serviceConfig = {
         ExecStart = "${cfg.package}/bin/lact daemon";
-        Nice = cfg.serviceRenice;
+        Nice = cfg.nice;
       };
       wantedBy = [ "multi-user.target" ];
     };
