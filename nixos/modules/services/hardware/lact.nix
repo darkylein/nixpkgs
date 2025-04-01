@@ -298,7 +298,7 @@ in
         type = lib.types.submodule {
           options = {
             version = lib.mkOption {
-              default = 2;
+              default = 4;
               description = "Configuration version number. Changing this is not recommended.";
               type = lib.types.ints.positive;
             };
@@ -315,19 +315,24 @@ in
                 ];
               };
 
-              admin_groups = lib.mkOption {
-                default = [
-                  "wheel"
-                ];
+              admin_group = lib.mkOption {
+                default = "wheel";
                 description = ''
-                  User groups who should have access to the daemon.
-                  ONLY the first group from this list that is found on the system is used!
+                  User group that owns the daemon socket. Any user in this group will be able to
+                  use the daemon. Access can also be granted with the `admin_user` setting.
                 '';
-                example = [
-                  "wheel"
-                  "sudo"
-                ];
-                type = lib.types.listOf lib.types.str;
+                example = "sudo";
+                type = lib.types.str;
+              };
+
+              admin_user = lib.mkOption {
+                default = null;
+                description = ''
+                  User that owns the daemon socket. This user will have access to the daemon, even
+                  if they are not in the part of the `admin_group` group.
+                '';
+                example = "foo";
+                type = lib.types.nullOr lib.types.str;
               };
 
               disable_clocks_cleanup = lib.mkOption {
