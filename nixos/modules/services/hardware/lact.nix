@@ -325,6 +325,24 @@ in
                 type = lib.types.str;
               };
 
+              # TODO: Remove admin_groups entirely if 0.7.3 is already out.
+              admin_groups =
+                lib.warn
+                  "services.lact.settings.admin_groups is deprecated. Use services.lact.settings.admin_group instead."
+                  lib.mkOption
+                  {
+                    default = [
+                      "wheel"
+                      "sudo"
+                    ];
+                    description = ''
+                      User groups who should have access to the daemon.
+                      ONLY the first group from this list that is found on the system is used!
+                    '';
+                    example = "sudo";
+                    type = lib.types.str;
+                  };
+
               admin_user = lib.mkOption {
                 default = null;
                 description = ''
