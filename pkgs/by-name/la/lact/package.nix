@@ -18,13 +18,13 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "lact";
-  version = "0.7.2";
+  version = "0.7.3";
 
   src = fetchFromGitHub {
     owner = "ilya-zlobintsev";
     repo = "LACT";
     tag = "v${version}";
-    hash = "sha256-6nNt/EnJKHdldjpCW2pLPBkU5TLGEaqtnUUBraeRa3I=";
+    hash = "sha256-R8VEAk+CzJCxPzJohsbL/XXH1GMzGI2W92sVJ2evqXs=";
   };
 
   useFetchCargoVendor = true;
